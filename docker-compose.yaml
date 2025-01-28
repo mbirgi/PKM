@@ -1,0 +1,22 @@
+version: '3.4'
+services:
+  weaviate:
+    image: semitechnologies/weaviate:latest
+    ports:
+      - "8080:8080"
+      - "50051:50051"  # gRPC port
+    environment:
+      QUERY_DEFAULTS_LIMIT: 20
+      AUTHENTICATION_ANONYMOUS_ACCESS_ENABLED: 'true'
+      PERSISTENCE_DATA_PATH: "./data"
+      ENABLE_MODULES: 'text2vec-transformers'
+      TRANSFORMERS_INFERENCE_API: 'http://localhost:8081'
+    depends_on:
+      - transformers
+
+  transformers:
+    image: ghcr.io/semi-technologies/transformers-inference:latest
+    ports:
+      - "8081:8080"
+    environment:
+      ENABLE_MODULES: 'text2vec-transformers'
